@@ -8,7 +8,7 @@ spec:
   source:
     path: argocd-applications/helm/nginx
     repoURL: https://github.com/lakkigithub/argocd.git
-    targetRevision: HEAD
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: default
