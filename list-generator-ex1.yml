@@ -1,30 +1,28 @@
 apiVersion: argoproj.io/v1alpha1
 kind: ApplicationSet
 metadata:
-  name: list-generator-ex1
+  name: applicationset-example
   namespace: argocd
 spec:
   generators:
-    - list:
-        elements:
-          - cluster: local
-            url: https://127.0.0.1:59764
-            path: helm/nginx
-          - cluster: default
-            url: https://kubernetes.default.svc
-            path: nginx-deployment
+    - git:
+        repoURL: https://github.com/lakkigithub/argocd.git
+        revision: HEAD
+        directories:
+          - path: helm-nginx
+          - path: nginx-deployment
   template:
     metadata:
-      name: '{{cluster}}-application'
+      name: '{{path.basename}}'
     spec:
       project: default
       source:
         repoURL: https://github.com/devopshobbies/argocd-tutorial.git
         targetRevision: main
-        path: {{path}}
+        path: '{{path}}'
       destination:
-        server: '{{url}}'
-        namespace: '{{cluster}}'
+        server: 'https://kubernetes.default.svc'
+        namespace: '{{.path.basename}}'
       syncPolicy:
         automated: {}
         syncOptions:
